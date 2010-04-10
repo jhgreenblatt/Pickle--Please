@@ -37,8 +37,41 @@ body{
     /*background:#f00;*/
 }
 
+/* Attcking the TITLE*/
+
+#blog-title a {
+background:url("assets/pp_blog_title.png") no-repeat scroll 0 0 transparent;
+color:white;
+display:block;
+width:330px;
+height: 110px;
+/*margin-left:-7px;*/
+text-indent:-1500px;
+position:relative;
+z-index: 10px;
+
+}
+
+#blog-title {
+    height: 110;
+    display: block;
+}
+
+/* Attcking the NAV MENU*/
+
+
 #access  {
-border-bottom:none;
+    border-bottom: none;
+    width: 960px;
+    margin: -103px auto;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 10px;
+}
+
+.sf-menu {
+    border: none;
+    float: right;
+    margin-right: 150px;
 }
 
 .sf-menu a {
@@ -48,20 +81,33 @@ border-bottom:none;
     text-decoration:none;
     font-family: georgia, times-new-roman, serif;
     font-size: 16px;
+    font-weight: lighter;
 }
 
-.sf-menu a, .sf-menu a:visited {
-    color:#414042;
+.sf-menu a:hover {
+    background:none repeat scroll 0 0 #CFEE3B;
 }
 
-#top_utility {
+.sf-menu a:active {
+    color: #FFFFFF;
+}
+
+
+.login {
     background-color: #f6f7f5;
-    
+    height: 30px;
     }
     
     #login{
         width:960px;
-        margin: 0 auto;
+        margin:auto;
+        
     }
     
+.entry-title  {
+    font-family:Georigia,Times-New-Roman, serif;
+    font-size:20px;
+    font-weight:bold;
+    line-height:26px;
+    }
     
