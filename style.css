@@ -1,0 +1,67 @@
+/*   
+Theme Name: Pickle, Please
+Theme URI: 
+Description: Use this theme to start your Thematic Child Theme development.
+Author: Ian Stewart
+Author URI: http://themeshaper.com/
+Template: thematic
+Version: 1.0
+Tags: Thematic
+.
+Thematic is © Ian Stewart http://themeshaper.com/
+.
+*/
+
+
+/* Reset browser defaults */
+@import url('../thematic/library/styles/reset.css');
+
+/* Apply basic typography styles */
+@import url('../thematic/library/styles/typography.css');
+
+/* Apply a basic layout */
+@import url('../thematic/library/layouts/2c-r-fixed.css');
+
+/* Apply basic image styles */
+@import url('../thematic/library/styles/images.css');
+
+/* Apply default theme styles and colors */
+/* It's better to actually copy over default.css into this file (or link to a copy in your child theme) if you're going to do anything outrageous */
+@import url('../thematic/library/styles/default.css');
+
+/* Prepare theme for plugins */
+@import url('../thematic/library/styles/plugins.css');
+
+/*background color*/
+body{
+    /*background:#f00;*/
+}
+
+#access  {
+border-bottom:none;
+}
+
+.sf-menu a {
+    color:#414042;
+    border: none;
+    padding:9px 13px;
+    text-decoration:none;
+    font-family: georgia, times-new-roman, serif;
+    font-size: 16px;
+}
+
+.sf-menu a, .sf-menu a:visited {
+    color:#414042;
+}
+
+#top_utility {
+    background-color: #f6f7f5;
+    
+    }
+    
+    #login{
+        width:960px;
+        margin: 0 auto;
+    }
+    
+    
