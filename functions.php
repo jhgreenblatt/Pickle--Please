@@ -41,10 +41,18 @@ function childtheme_top_utility() {
 
 } // end of our new function childtheme_top_utility
 
-
 // Now we add our new function to our Thematic Action Hook
 
 add_action('thematic_before','childtheme_top_utility');
 
+//tutoiral
 
+
+      function childtheme_posttitle($posttitle) {
+
+       return '<div class="containing">' . $posttitle . '</div>';
+
+      }
+
+      
 ?>
