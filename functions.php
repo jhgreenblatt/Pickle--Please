@@ -29,13 +29,20 @@ function childtheme_top_utility() {
 
 <!Ð the utility html starts here Ð>
 
-<div class="login">
-    <div id="login">
-        <span class="loginout"><?php wp_loginout(); ?></span>
-        <span class="register"><?php wp_register('| ', ''); ?></span>
+<div class="top_container">
+    <div class="top_container_content">
+        <div id="login">
+            <span class="loginout"><?php wp_loginout(); ?></span>
+            <span class="register"><?php wp_register('| ', ''); ?></span>
+        </div>
+        <div id="greeting">
+            <p>Please tell us what pickle pleases you. Join Here</p>
+        </div>
+        <div>
+            <span class="searchform"><?php get_search_form(); ?> </span>
+        </div>
     </div>
 </div>
-
 <!Ð the utility html ends here Ð>
 <?php
 
@@ -45,14 +52,25 @@ function childtheme_top_utility() {
 
 add_action('thematic_before','childtheme_top_utility');
 
-//tutoiral
+//adding a div around the postheader--------------------------------------------------------------------
 
 
       function childtheme_posttitle($posttitle) {
 
        return '<div class="containing">' . $posttitle . '</div>';
-
       }
 
+      add_filter('thematic_postheader_posttitle','childtheme_posttitle');
       
+// Unhook default Thematic functions----(doesn't work >.<)----------------------------------------------------------------
+
+      //function unhook_thematic_functions() {
+
+          // Don't forget the position number if the original function has one
+ 
+          //remove_action('thematic_postheader','thematic_entry-content');
+      //}
+      //add_action('init','unhook_thematic_functions');
+
+
 ?>
