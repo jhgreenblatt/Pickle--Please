@@ -1,0 +1,29 @@
+//------------------------------------------------------------------------------creating a thumb loop (seeMirnaOSDF09)
+//* First we will add the thumbnail feature *//
+add_theme_support('post-thumbnails');
+ 
+//* To create our own loop we have to get rid of thematic index loop first.*//
+function remove_index_loop() {
+     remove_action('thematic_indexloop', 'thematic_index_loop');
+}
+add_action('init', 'remove_index_loop');
+ 
+// Now we will create our own loop.
+function thumb_index_loop(){
+       while ( have_posts() ) : the_post()  // Start the loop:
+    //This is just what we decide to show in each post ?>
+    <div id="post-<?php the_ID() ?>" class="<?php thematic_post_class() ?>">
+        <?php the_post_thumbnail();  // we just called for the thumbnail ?>
+          <div class="entry-content">
+             <!-- Display the Title as a link to the Post's permalink. -->
+            <h2 class="entry-title"><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
+            <?php echo polldaddy_get_rating_html(); ?>
+            <?php the_meta(); ?>
+            <?php the_content('Read more...'); ?>         
+        </div>
+    </div><!-- .post -->
+    <?php
+    endwhile; // loop done, go back up 
+}
+// And in the end activate the new loop.
+add_action('thematic_indexloop', 'thumb_index_loop');
