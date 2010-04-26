@@ -60,46 +60,133 @@ add_action('init', 'remove_index_loop');
  
 // Now we will create our own loop.
 function thumb_index_loop(){
-         // This shows posts only from category id= 
-        query_posts($query_string . '&cat=18');
-       while ( have_posts() ) : the_post()  // Start the loop:
-    // This is just what we decide to show in each post ?>
-    <div id="post-<?php the_ID() ?>" class="<?php thematic_post_class() ?>">
-        <?php the_post_thumbnail();  // we just called for the thumbnail ?>
-        <div class="entry-content">
-             <!-- Display the Title as a link to the Post's permalink. -->
-            <h2 class="entry-title"><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
-            <?php echo polldaddy_get_rating_html(); ?>
-            <?php the_meta(); ?>
-            <?php the_content('Read more...'); ?>         
-        </div>
-    </div><!-- .post -->
-    <?php
-    endwhile; // loop done, go back up
-    
-    ?>
-    <div id="front_gallery_container">
-        <div id="col_one">
+           
+    // This shows posts only from category (featured pickle) id=18
+    query_posts($query_string . '&cat=18');
             
-        </div>
+        // Start the loop:  
+        if (have_posts()) :
+        while ( have_posts() ) : the_post();
         
-        <div id="col_two">
-            
-        </div>
         
-        <div id="col_three">
+            // This is just what we decide to show in each post ?>
+            <div id="featured" class="<?php thematic_post_class() ?>">
+                <?php the_post_thumbnail();  // we just called for the thumbnail ?>
+                <div class="entry-content">
+                     <!-- Display the Title as a link to the Post's permalink. -->
+                    <h2 class="entry-title"><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
+                    <?php echo polldaddy_get_rating_html(); ?>
+                    <?php the_meta(); ?>
+                    <?php the_content('Read more...'); ?>         
+                </div>
+            </div><!-- .post -->
+    
+        <?php endwhile; // loop done, go back up | enter navigational links between here and else
+        
+        else : ?> <!-- add not found content here -->
+            <h2>Not Found</h2>
+        <?php endif;  //the first loop is now completely ended 
+
+//------------------------------------------------------------------------------This query asks for posts only from category (front page gallery) id=17
+    query_posts($query_string . '&cat=17');
+                
+        // Start the second loop:  
+        if (have_posts()) :
+        while ( have_posts() ) : the_post();?>
             
-        </div>
+            <div id="gallery_thumb" class="<?php thematic_post_class() ?>">
+                <?php the_post_thumbnail();  // we just called for the thumbnail ?>
+                <div class="gallery-content">
+                    <!-- Display the Title as a link to the Post's permalink. -->
+                    <h2 class="entry-title"><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
+                    <?php echo polldaddy_get_rating_html(); ?>
+                    <?php the_meta(); ?>
+                </div>
+            </div><!-- .post -->
+        <?php endwhile; // loop done, go back up | enter navigational links between here and else
+        
+        else : ?> <!-- add not found content here -->
+            <h2>Not Found</h2>
+        <?php endif;  //the loop is now completely ended 
     
-    </div><!-- front_gallery_container -->
-    <?php
+
+} //closes the thumb_index_loop function code
     
-    
-    
-}
-// And in the end activate the new loop.
+// activate the new loop fucntion.
 add_action('thematic_indexloop', 'thumb_index_loop');
 
+
+//------------------------------------------------------------------------------UN-Register unneccesary sidebars & register a new Sidebar.
+
+function pickleplease_sidebars_init() {
+
+      // Register the New Footer Sidebar
+      register_sidebar(array(
+        
+      // Title for the Widget Dashboard
+      'name' => 'New Sidebar',
+      
+      // ID for the XHTML Markup
+      'id' => 'new-sidebar',
+
+      // Description for the Widget Dashboard Box
+      'description' => __('This is a right column widget area.', 'thematic'),
+
+      // Do not edit these. It keeps Headers and lists consistent for Thematic
+      'before_widget' => thematic_before_widget(),
+      'after_widget' => thematic_after_widget(),
+      'before_title' => thematic_before_title(),
+      'after_title' => thematic_after_title(),
+      ));
+
+
+      // Unregister and sidebars you donÕt need based on its ID.
+      // For a full list of Thematic sidebar IDs, look at /thematc/library/extensions/widgets-extensions.php
+      //unregister_sidebar('primary-aside');
+      unregister_sidebar('secondary-aside');
+      unregister_sidebar('index-top');
+      unregister_sidebar('index-insert');
+      unregister_sidebar('index-bottom');
+      unregister_sidebar('single-top');
+      unregister_sidebar('single-insert');
+      unregister_sidebar('single-bottom');
+      unregister_sidebar('page-top');
+      unregister_sidebar('page-bottom');
+      }
+      // When WP initiates, add the above settings
+      add_action( 'init', 'pickleplease_sidebars_init',20 );
+      ?>
+<?php function pickle_sidebar() {
+    ?><div id="side_bar">
+        <div id="sociable">
+            <?php if (function_exists('sociable_html')) {
+            echo sociable_html();
+            } ?> 
+        </div>
+        <div id="tag_cloud">
+            <h2>Tags</h2> 
+            <?php wp_tag_cloud( $args );  
+            
+            $args = array(
+    'smallest'  => 8, 
+    'largest'   => 22,
+    'unit'      => 'pt', 
+    'number'    => 45,  
+    'format'    => 'flat',
+    'separator' => '\n',
+    'orderby'   => 'name', 
+    'order'     => 'ASC',
+    'link'      => 'view', 
+    'taxonomy'  => 'post_tag', 
+    'echo'      => true ); ?>         
+        </div>
+        <div id="join">
+        <?php    theme_my_login() ?>    
+        </div>
+    </div>
+<?php
+}
+add_action('thematic_sidebar','pickle_sidebar');
 
 
 
