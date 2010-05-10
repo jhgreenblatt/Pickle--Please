@@ -118,6 +118,10 @@ z-index: 100;
 
 
 /* Attacking the CONTENT LAYOUT AND STYLING*/
+#blog_content {
+    overflow:hidden;
+    width:621px;
+}
 
 #content {
     overflow:hidden;
@@ -206,11 +210,16 @@ z-index: 100;
     float: left;
     margin-right: 7px;
     margin-bottom: 7px;
+    overflow: hidden;
+}
+
+#gallery_thumb .thumb:hover{
+    display: none;
 }
 
 .gallery-content{
-    margin-top: -150px;
-    padding: 20px 5px;
+    margin-top: 0;
+    padding: 0 5px;
 }
 
 .gallery-content .pd-rating{

@@ -22,100 +22,220 @@
 //add_filter('wp_page_menu_args','childtheme_menu_args');
 
 
-//------------------------------------------------------------------------------adding the top utility bar as an action hook
+//--------------------------------------------adding the top utility bar as an action hook
 function pickle_top_utility() {
-?>
 
-<!-- the utility html starts here -->
 
-<div class="top_container">
-    <div class="top_container_content">
-        <div id="login">
-            <span class="loginout"><?php wp_loginout(); ?></span>
-            <span class="register"><?php wp_register('| ', ''); ?></span>
-        </div>
-        <div id="greeting">
-            <p>Please tell us what pickle pleases you. Join Here</p>
-        </div>
-        <div>
-            <span class="searchform"><?php get_search_form(); ?> </span>
+//the utility html starts here
+    ?>
+    <div class="top_container">
+        <div class="top_container_content">
+            <div id="login">
+                <span class="loginout"><?php wp_loginout(); ?></span>
+                <span class="register"><?php wp_register('| ', ''); ?></span>
+            </div>
+            <div id="greeting">
+                <p>Please tell us what pickle pleases you. Join Here</p>
+            </div>
+            <div>
+                <span class="searchform"><?php get_search_form(); ?> </span>
+            </div>
         </div>
     </div>
-</div>
-<!-- the utility html ends here -->
-<?php
+    <?php
+//the utility html ends here
+
+
 } // end of our new function childtheme_top_utility
-add_action('thematic_before','pickle_top_utility'); // Here we add our new function to our Thematic Action Hook
+// Here we add our new function to our Thematic Action Hook
+add_action('thematic_before','pickle_top_utility'); 
 
 
-//------------------------------------------------------------------------------creating a thumb loop (seeMirnaOSDF09)
-//* First we will add the thumbnail feature *//
-add_theme_support('post-thumbnails');
- 
-//* To create our own loop we have to get rid of thematic index loop first.*//
+//--------------------------------------------creating a thumb loop (seeMirnaOSDF09)
+//--------------------------------------------combined with angel loop
+//--------------------------------------------two sepearte loops on home page. both inside the pickle_index_loop function 
+
+
+//First we will add the thumbnail feature
+    add_theme_support('post-thumbnails');
+
+// To create our own loop we have to get rid of thematic index loop first.
 function remove_index_loop() {
      remove_action('thematic_indexloop', 'thematic_index_loop');
 }
 add_action('init', 'remove_index_loop');
  
-// Now we will create our own loop.
-function thumb_index_loop(){
-           
-    // This shows posts only from category (featured pickle) id=18
-    query_posts($query_string . '&cat=18');
-            
-        // Start the loop:  
-        if (have_posts()) :
-        while ( have_posts() ) : the_post();
+    //Code below adapted from Angel Ng
+    //www.thisisangelng.com/blog.
+    //http://github.com/thisisangelng/wordpressv1/blob/master/angel_thematic_v1/functions.php
+    //Thanks Angel! 
+    
+    
+    //Below we are defining our loops within a function that replaces the index loop.
+    // Start by defining the function 
+function pickle_indexloop(){
+
+
+//Use php to create a new loop. 
+    if (is_home() & !is_paged()) { 
+    
+    //NOTE: this is where angel created divs to hold her loop content and also category header,
+    //because she i
+    //slightly different in my case, so I'm not writing any html here for now.-->
+    
+
+
+//Create a query to use with a loop. Big thanks to Allan Cole - www.allancole.com - for sharing his code!
+// First, grab any global settings you may need for your loop.
+global $paged, $more, $post;
+$more = 0;
+
+// Second, create a new temporary Variable for your query.
+// $feature_pickle_query is the Variable used in this example query.
+// If you run any new Queries, change the variable to something else more specific ie: $feature_wp_query.
+$temp = $feature_pickle_query;
+
+// Next, set your new Variable to NULL so it's empty.
+$feature_pickle_query = null;
+
+// Then, turn your variable int the WP_Query() function.
+$feature_pickle_query = new WP_Query();
+
+// Set you're query parameters. Need more Parameters?: http://codex.wordpress.org/Template_Tags/query_posts
+$feature_pickle_query->query(array(
+
+// This will create a loop that shows 2 posts from the creative category.
+    'category_name' => 'featured-pickle',
+    'showposts' => '1',
+    )); ?>
+
+<?php
+// Add Previous and Next post links here. (http://codex.wordpress.org/Template_Tags/previous_post_link)
+// Or just use the thematic action.
+thematic_navigation_above(); ?>
+
+<?php
+// While posts exists in the Query, display them.
+while ($feature_pickle_query->have_posts()) : $feature_pickle_query->the_post();
+
         
-        
-            // This is just what we decide to show in each post ?>
-            <div id="featured" class="<?php thematic_post_class() ?>">
+     // Start the looped content here. ?>  
+        <div id="post-<?php the_ID(); ?>" class="<?php thematic_post_class() ?>">
+                
+            <div id="post-content">       
                 <?php the_post_thumbnail();  // we just called for the thumbnail ?>
                 <div class="entry-content">
+                    <?php if(get_post_meta($post->ID, 'designed-by')){ ?><p class="designer">Designed by: <?php echo get_post_meta($post->ID, 'designed-by', $single = true); ?></p><?php } ?>
                      <!-- Display the Title as a link to the Post's permalink. -->
                     <h2 class="entry-title"><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
                     <?php echo polldaddy_get_rating_html(); ?>
-                    <?php the_meta(); ?>
-                    <?php the_content('Read more...'); ?>         
+                    <?php the_content('Read more...'); ?>
+                    
                 </div>
-            </div><!-- .post -->
-    
-        <?php endwhile; // loop done, go back up | enter navigational links between here and else
+            </div>    
+        </div><!-- #featured -->
         
-        else : ?> <!-- add not found content here -->
-            <h2>Not Found</h2>
-        <?php endif;  //the first loop is now completely ended 
 
-//------------------------------------------------------------------------------This query asks for posts only from category (front page gallery) id=17
-    query_posts($query_string . '&cat=17');
-                
-        // Start the second loop:  
-        if (have_posts()) :
-        while ( have_posts() ) : the_post();?>
-            
-            <div id="gallery_thumb" class="<?php thematic_post_class() ?>">
-                <?php the_post_thumbnail();  // we just called for the thumbnail ?>
-                <div class="gallery-content">
-                    <!-- Display the Title as a link to the Post's permalink. -->
-                    <h2 class="entry-title"><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
-                    <?php echo polldaddy_get_rating_html(); ?>
-                    <?php the_meta(); ?>
+<?php endwhile;
+}
+
+// Add Previous and Next post links here. (http://codex.wordpress.org/Template_Tags/previous_post_link)
+// Or us the thematic action.
+thematic_navigation_below(); ?>
+
+<?php
+// End the Query and set it back to temporary so that it doesn't interfere with other queries.
+$feature_pickle_query = null; $feature_pickle_query = $temp; ?>
+
+<?php // Thats it! End of the feature pickle query.?>
+
+<!-- Now we want to create another loop that shows 6 posts as a gallery below the feature pickle post.
+    Remember we are still within the same funtion, which is ultimately replacing the index loop.-->
+    
+<!-- Use php to create a new loop. -->
+    <?php if (is_home() & !is_paged()) { 
+
+// Second, create a new temporary Variable for your query.
+// $front_page_gallery is the Variable used in this example query.
+// If you run any new Queries, change the variable to something else more specific ie: $feature_wp_query.
+$temp = $front_page_gallery;
+
+// Next, set your new Variable to NULL so it's empty.
+$front_page_gallery = null;
+
+// Then, turn your variable int the WP_Query() function.
+$front_page_gallery = new WP_Query();
+
+// Set you're query parameters. Need more Parameters?: http://codex.wordpress.org/Template_Tags/query_posts
+$front_page_gallery->query(array(
+
+// This will create a loop that shows 2 posts from the creative category.
+    'category_name' => 'front-page-gallery',
+    'showposts' => '6',
+    )); ?>
+
+<?php
+// Add Previous and Next post links here. (http://codex.wordpress.org/Template_Tags/previous_post_link)
+// Or just use the thematic action.
+thematic_navigation_above(); ?>
+
+<?php
+// While posts exists in the Query, display them.
+while ($front_page_gallery->have_posts()) : $front_page_gallery->the_post();  
+
+            // Start the looped content here. ?>
+            <div id="post-<?php the_ID(); ?>" class="<?php thematic_post_class();?>">
+                <div id="gallery_thumb">
+                    <div class="gallery-content">
+                        <!-- Display the Title as a link to the Post's permalink. -->
+                        <h2 class="entry-title"><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
+                        <?php echo polldaddy_get_rating_html(); ?>
+                        <?php the_meta(); ?>
+                    </div>
                 </div>
-            </div><!-- .post -->
-        <?php endwhile; // loop done, go back up | enter navigational links between here and else
-        
-        else : ?> <!-- add not found content here -->
-            <h2>Not Found</h2>
-        <?php endif;  //the loop is now completely ended 
+            </div><!-- #post -->
+       
+<?php endwhile; //This is how to end a loop
+}
+
+// Add Previous and Next post links here. (http://codex.wordpress.org/Template_Tags/previous_post_link)
+// Or us the thematic action.
+thematic_navigation_below();
+
+
+// End the Query and set it back to temporary so that it doesn't interfere with other queries.
+$front_page_gallery = null; $front_page_gallery = $temp; ?>
+
+<?php // Thats it! End of front page gallery.
+
+
+
     
+} // And importantly we must include this bracket to close out our feature_pickle function
 
-} //closes the thumb_index_loop function code
+//Add the function to the Action Hook.
+add_action ('thematic_indexloop','pickle_indexloop');
+
+
+//Creating the content for the Single Post
+function remove_single_post() {
+  remove_action('thematic_singlepost', 'thematic_single_post');
+}
+add_action('init', 'remove_single_post');
+
+function gallery_single_post() { 
+  global $post;
+        ?><div id="post-<?php the_ID(); ?>" class="<?php thematic_post_class();?>"> <?php
+            if(get_post_meta($post->ID, 'designed-by')){ ?><p class="designer">Designed by: <?php echo get_post_meta($post->ID, 'designed-by', $single = true); ?></p><?php }	
+
+            ?></div>
+<?php
+}
+add_action('thematic_singlepost', 'gallery_single_post');
+
+// End of SINGLE   
+
     
-// activate the new loop fucntion.
-add_action('thematic_indexloop', 'thumb_index_loop');
-
-
 //------------------------------------------------------------------------------UN-Register unneccesary sidebars & register a new Sidebar.
 
 function pickleplease_sidebars_init() {
@@ -188,6 +308,105 @@ function pickleplease_sidebars_init() {
 }
 add_action('thematic_sidebar','pickle_sidebar');
 
+/*
+Plugin Name: Custom Write Panel
+Plugin URI: http://wefunction.com/2008/10/tutorial-create-custom-write-panels-in-wordpress
+Description: Allows custom fields to be added to the WordPress Post Page
+Version: 1.0
+Author: Spencer
+Author URI: http://wefunction.com
+/* ----------------------------------------------*/
 
+$new_meta_boxes =
+  array(
+    "pickle-name" => array(  
+        "name" => "pickle-name",  
+        "title" => "Pickle Name",  
+        "description" => "Enter the name of the pickle you are reviewing. Usually found on the label."),  
+    "pickle-maker" => array(  
+        "name" => "pickle-maker",  
+        "title" => "Pickle Maker",  
+        "description" => "Enter the name of the company responsible for your brined goodness."),
+    "store-purchased" => array(  
+        "name" => "store-purchased",  
+        "title" => "Store Purchased",  
+        "description" => "Name the store where you bought this pickle. The more specific the better."),
+    "store-location" => array(  
+        "name" => "store-location",  
+        "title" => "Store Location",  
+        "description" => "And where is this store located?"),
+    "price" => array(  
+        "name" => "price",  
+        "title" => "Price",  
+        "description" => "How much did the pickle cost? Please enter in logical currency format: e.g. $9.00."),
+    "vegetable-type" => array(  
+        "name" => "vegetable-type",  
+        "title" => "Vegetable Type",  
+        "description" => "What kind of vegetable is your pickle? Don't get bogged down in technicalities here. We also cherish pickled fruits. "),
+    "flavor" => array(  
+        "name" => "flavor",  
+        "title" => "Flavor Tags",  
+        "description" => "One or two-word adjectives, please. Seperate them with commas if you have mulitple flavors to report. Most good pickles are complex!"),
+    "texture" => array(  
+        "name" => "texture",  
+        "title" => "Texture Tags",  
+        "description" => "Same as above, except describing the pickle's texture."),
+);
 
+function new_meta_boxes() {
+  global $post, $new_meta_boxes;
+  
+  foreach($new_meta_boxes as $meta_box) {
+    $meta_box_value = get_post_meta($post->ID, $meta_box['name'], true);
+    
+    if($meta_box_value == "")
+      $meta_box_value = $meta_box['std'];
+    
+    echo'<input type="hidden" name="'.$meta_box['name'].'_noncename" id="'.$meta_box['name'].'_noncename" value="'.wp_create_nonce( plugin_basename(__FILE__) ).'" />';
+    
+    echo'<label style="font-weight: bold; display: block; padding: 5px 0 2px 2px" for="'.$meta_box['name'].'">'.$meta_box['title'].'</label>';
+    
+    echo'<input type="text" name="'.$meta_box['name'].'" value="'.$meta_box_value.'" size="55" /><br />';
+    
+    echo'<p><label for="'.$meta_box['name'].'">'.$meta_box['description'].'</label></p>';
+  }
+}
+
+function create_meta_box() {
+  global $theme_name;
+  if ( function_exists('add_meta_box') ) {
+    add_meta_box( 'new-meta-boxes', 'Pickle Please Post Settings', 'new_meta_boxes', 'post', 'normal', 'high' );
+  }
+}
+
+function save_postdata( $post_id ) {
+  global $post, $new_meta_boxes;
+  
+  foreach($new_meta_boxes as $meta_box) {
+  // Verify
+  if ( !wp_verify_nonce( $_POST[$meta_box['name'].'_noncename'], plugin_basename(__FILE__) )) {
+    return $post_id;
+  }
+  
+  if ( 'page' == $_POST['post_type'] ) {
+  if ( !current_user_can( 'edit_page', $post_id ))
+    return $post_id;
+  } else {
+  if ( !current_user_can( 'edit_post', $post_id ))
+    return $post_id;
+  }
+  
+  $data = $_POST[$meta_box['name']];
+  
+  if(get_post_meta($post_id, $meta_box['name']) == "")
+    add_post_meta($post_id, $meta_box['name'], $data, true);
+  elseif($data != get_post_meta($post_id, $meta_box['name'], true))
+    update_post_meta($post_id, $meta_box['name'], $data);
+  elseif($data == "")
+    delete_post_meta($post_id, $meta_box['name'], get_post_meta($post_id, $meta_box['name'], true));
+  }
+}
+
+add_action('admin_menu', 'create_meta_box');
+add_action('save_post', 'save_postdata');
 ?>
