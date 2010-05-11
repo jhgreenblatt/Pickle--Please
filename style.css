@@ -39,27 +39,59 @@ body{
 /* Attacking the TOP UTILITY BAR*/
 .top_container {
     background-color: #f6f7f5;
-    height: 30px;
+    height: 40px;
     }
     
 .top_container_content{
     width:960px;
-    height: 30px;
     margin:0 auto;
 }
 #login {
     float:left;
     width:200px;
-    margin-top: 3px;
-    margin-left:20px;
+    padding-top: 10px;
+    margin-left:10px;
 }
-
+.loginout{
+    font-family: georgia, times-new-roman, serif;
+    font-size: 13px;
+    font-weight: lighter;
+}
+.register{
+    font-family: georgia, times-new-roman, serif;
+    font-size: 13px;
+    font-weight: lighter;
+}
 #greeting{
     float: left;
     width: 400px;
-    margin-top: 3px;
+    padding-top: 10px;
+    font-family: georgia, times-new-roman, serif;
+    font-size: 13px;
+    font-weight: lighter;
+    font-style: italic;
 }
+.search_form_container{
+    float: left;
+    padding-top: 10px;
+}
+#s{
+    font-family: georgia, times-new-roman, serif;
+    font-size: 13px;
+    font-weight: lighter;
+}
+#searchsubmit{
+    font-family: georgia, times-new-roman, serif;
+    font-size: 13px;
+    font-weight: lighter;
+}
+
+
 /* Attacking the TITLE*/
+
+#branding{
+    padding: 50px 0 10px;
+}
 
 #blog-title a {
 background:url("assets/pp_blog_title.png") no-repeat scroll 0 0 transparent;
@@ -70,7 +102,7 @@ height: 110px;
 /*margin-left:-7px;*/
 text-indent:-1500px;
 position:relative;
-z-index: 100;
+z-index: 500;
 
 }
 
@@ -86,7 +118,7 @@ z-index: 100;
 #access  {
     border-bottom: none;
     width: 960px;
-    margin: -103px auto;
+    margin: -70px auto;
     border-bottom: 2px solid #000000;
     padding-bottom: 10px;
 }
@@ -117,7 +149,7 @@ z-index: 100;
 
 
 
-/* Attacking the CONTENT LAYOUT AND STYLING*/
+/* Attacking the main content*/
 #blog_content {
     overflow:hidden;
     width:621px;
@@ -130,20 +162,28 @@ z-index: 100;
 .containing{
     width:385px;
     position:relative;
-    z-index:2;
+    z-index:500;
     float:right;
     
 }
-
+/* featured post*/
 #featured{
     padding-bottom: 15px;
     margin-right: 7px;
 }
 .entry-content h2 {
     padding:0px 20px 0px 20px;
-    
 }
-.post-meta{
+.maker_name {
+    color:#414042;
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom: 6px;
+    position:relative;
+}
+/* this was being used for getting post meta, but now we're calling thorugh the custom write panels
+  
+  .post-meta{
     list-style:none outside none;
     margin:0;
     padding:0 20px 5px 20px;
@@ -154,13 +194,15 @@ z-index: 100;
 
 .post-meta-key{
     display: none;
-}
-.entry-title a {
+}*/
+
+.entry-title {
     font-family:Georigia,Times-New-Roman, serif;
     color:#414042;
     font-size:20px;
     font-weight:bold;
     line-height:26px;
+    padding-bottom:0;
     }
     
 .entry-title a:hover{
@@ -169,15 +211,16 @@ z-index: 100;
 .entry-title a:active{
     color:#cccccc;
 }
-.entry-meta {
+/* stopped using since there is not entry meta data that you are calling for (yet)
+  .entry-meta {
     color:#414042;
     font-size:16px;
     font-weight:bold;
     line-height:22px;
     position:relative;
-    
 
-}
+}*/
+
 .entry-content{
     width: 385px;
     height:200px;
@@ -204,7 +247,9 @@ z-index: 100;
     font-size: 10px;
 }
 
-#gallery_thumb{
+/* -------the main page thumb gallery*/
+
+.gallery_thumb_container .hentry {
     width: 200px;
     height: 150px;
     float: left;
@@ -213,12 +258,8 @@ z-index: 100;
     overflow: hidden;
 }
 
-#gallery_thumb .thumb:hover{
-    display: none;
-}
-
 .gallery-content{
-    margin-top: 0;
+    margin-top: -150px;
     padding: 0 5px;
 }
 
@@ -238,7 +279,7 @@ z-index: 100;
 
 #tag_cloud{
     padding: 20px 5px 20px 60px;
-    height: 200px;
+    height: 400px;
 }
 #join{
     padding: 20px 0 20px 60px;

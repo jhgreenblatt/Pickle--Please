@@ -35,10 +35,10 @@ function pickle_top_utility() {
                 <span class="register"><?php wp_register('| ', ''); ?></span>
             </div>
             <div id="greeting">
-                <p>Please tell us what pickle pleases you. Join Here</p>
+                <p>Please tell us what pickle pleases you. <span style="color:red;">Join Here</span></p>
             </div>
-            <div>
-                <span class="searchform"><?php get_search_form(); ?> </span>
+            <div class="search_form_container">
+                <?php get_search_form(); ?>
             </div>
         </div>
     </div>
@@ -80,14 +80,14 @@ function pickle_indexloop(){
     if (is_home() & !is_paged()) { 
     
     //NOTE: this is where angel created divs to hold her loop content and also category header,
-    //because she i
-    //slightly different in my case, so I'm not writing any html here for now.-->
+    //because she is adding her function as an action hook below_container
+    //but in my case, i'm filtering the thematic_indexloop, so no html is necessary here for me.
     
 
 
 //Create a query to use with a loop. Big thanks to Allan Cole - www.allancole.com - for sharing his code!
 // First, grab any global settings you may need for your loop.
-global $paged, $more, $post;
+global $paged, $more, $post;       //the post variable is for calling meta data created with custom write panels
 $more = 0;
 
 // Second, create a new temporary Variable for your query.
@@ -104,17 +104,15 @@ $feature_pickle_query = new WP_Query();
 // Set you're query parameters. Need more Parameters?: http://codex.wordpress.org/Template_Tags/query_posts
 $feature_pickle_query->query(array(
 
-// This will create a loop that shows 2 posts from the creative category.
+// This will create a loop that shows 1 post from the featured-pickle.
     'category_name' => 'featured-pickle',
     'showposts' => '1',
-    )); ?>
+    )); 
 
-<?php
 // Add Previous and Next post links here. (http://codex.wordpress.org/Template_Tags/previous_post_link)
 // Or just use the thematic action.
-thematic_navigation_above(); ?>
+thematic_navigation_above();
 
-<?php
 // While posts exists in the Query, display them.
 while ($feature_pickle_query->have_posts()) : $feature_pickle_query->the_post();
 
@@ -125,35 +123,34 @@ while ($feature_pickle_query->have_posts()) : $feature_pickle_query->the_post();
             <div id="post-content">       
                 <?php the_post_thumbnail();  // we just called for the thumbnail ?>
                 <div class="entry-content">
-                    <?php if(get_post_meta($post->ID, 'designed-by')){ ?><p class="designer">Designed by: <?php echo get_post_meta($post->ID, 'designed-by', $single = true); ?></p><?php } ?>
                      <!-- Display the Title as a link to the Post's permalink. -->
                     <h2 class="entry-title"><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
+                    <?php if(get_post_meta($post->ID, 'pickle-maker')){ ?><p class="maker_name"><?php echo get_post_meta($post->ID, 'pickle-maker', $single = true); ?></p><?php } ?>
                     <?php echo polldaddy_get_rating_html(); ?>
                     <?php the_content('Read more...'); ?>
-                    
                 </div>
             </div>    
-        </div><!-- #featured -->
+        </div><?php //#featured
         
-
-<?php endwhile;
+endwhile; //This is how to end a loop
 }
 
 // Add Previous and Next post links here. (http://codex.wordpress.org/Template_Tags/previous_post_link)
 // Or us the thematic action.
-thematic_navigation_below(); ?>
+thematic_navigation_below(); 
 
-<?php
 // End the Query and set it back to temporary so that it doesn't interfere with other queries.
-$feature_pickle_query = null; $feature_pickle_query = $temp; ?>
+$feature_pickle_query = null; $feature_pickle_query = $temp;
 
-<?php // Thats it! End of the feature pickle query.?>
+// Thats it! End of the feature pickle query.
 
-<!-- Now we want to create another loop that shows 6 posts as a gallery below the feature pickle post.
-    Remember we are still within the same funtion, which is ultimately replacing the index loop.-->
+
+
+//------------------------Now we want to create another loop that shows 6 posts as a gallery below the feature pickle post.
+//------------------------Remember we are still within the same funtion, which is ultimately replacing the index loop.
     
-<!-- Use php to create a new loop. -->
-    <?php if (is_home() & !is_paged()) { 
+//Use php to create a new loop. 
+     if (is_home() & !is_paged()) { 
 
 // Second, create a new temporary Variable for your query.
 // $front_page_gallery is the Variable used in this example query.
@@ -169,33 +166,34 @@ $front_page_gallery = new WP_Query();
 // Set you're query parameters. Need more Parameters?: http://codex.wordpress.org/Template_Tags/query_posts
 $front_page_gallery->query(array(
 
-// This will create a loop that shows 2 posts from the creative category.
+// This will create a loop that shows 6 posts from the front-page-gallery category.
     'category_name' => 'front-page-gallery',
     'showposts' => '6',
-    )); ?>
+    ));
 
-<?php
 // Add Previous and Next post links here. (http://codex.wordpress.org/Template_Tags/previous_post_link)
 // Or just use the thematic action.
-thematic_navigation_above(); ?>
+thematic_navigation_above(); 
 
-<?php
+
 // While posts exists in the Query, display them.
 while ($front_page_gallery->have_posts()) : $front_page_gallery->the_post();  
 
             // Start the looped content here. ?>
-            <div id="post-<?php the_ID(); ?>" class="<?php thematic_post_class();?>">
-                <div id="gallery_thumb">
+            <div class="gallery_thumb_container">
+                <div id="post-<?php the_ID(); ?>" class="<?php thematic_post_class();?>">
+                    <?php the_post_thumbnail();  // we just called for the thumbnail ?>
                     <div class="gallery-content">
                         <!-- Display the Title as a link to the Post's permalink. -->
                         <h2 class="entry-title"><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
+                        <?php if(get_post_meta($post->ID, 'pickle-maker')){ ?><p class="maker_name"><?php echo get_post_meta($post->ID, 'pickle-maker', $single = true); ?></p><?php } ?>
                         <?php echo polldaddy_get_rating_html(); ?>
-                        <?php the_meta(); ?>
                     </div>
                 </div>
-            </div><!-- #post -->
+            </div>
+<?php
        
-<?php endwhile; //This is how to end a loop
+endwhile; //This is how to end a loop
 }
 
 // Add Previous and Next post links here. (http://codex.wordpress.org/Template_Tags/previous_post_link)
@@ -225,10 +223,18 @@ add_action('init', 'remove_single_post');
 
 function gallery_single_post() { 
   global $post;
-        ?><div id="post-<?php the_ID(); ?>" class="<?php thematic_post_class();?>"> <?php
-            if(get_post_meta($post->ID, 'designed-by')){ ?><p class="designer">Designed by: <?php echo get_post_meta($post->ID, 'designed-by', $single = true); ?></p><?php }	
-
-            ?></div>
+        ?><div id="post-<?php the_ID(); ?>" class="<?php thematic_post_class();?>"> 
+            <ul>
+            <?php   if(get_post_meta($post->ID, 'pickle-name')){ ?><li class="maker_name"><?php echo get_post_meta($post->ID, 'pickle-name', $single = true); ?></li><?php }
+                    if(get_post_meta($post->ID, 'pickle-maker')){ ?><li class="maker_name"><?php echo get_post_meta($post->ID, 'pickle-maker', $single = true); ?></li><?php }
+                    if(get_post_meta($post->ID, 'store-purchased')){ ?><li class="maker_name"><?php echo get_post_meta($post->ID, 'store-purchased', $single = true); ?></li><?php }
+                    if(get_post_meta($post->ID, 'store-location')){ ?><li class="maker_name"><?php echo get_post_meta($post->ID, 'store-location', $single = true); ?></li><?php }
+                    if(get_post_meta($post->ID, 'price')){ ?><li class="maker_name"><?php echo get_post_meta($post->ID, 'price', $single = true); ?></li><?php }
+                    if(get_post_meta($post->ID, 'vegetable-type')){ ?><li class="maker_name"><?php echo get_post_meta($post->ID, 'vegetable-type', $single = true); ?></li><?php }
+                    if(get_post_meta($post->ID, 'flavor')){ ?><li class="maker_name"><?php echo get_post_meta($post->ID, 'flavor', $single = true); ?></li><?php }
+                    if(get_post_meta($post->ID, 'texture')){ ?><li class="maker_name"><?php echo get_post_meta($post->ID, 'texture', $single = true); ?></li><?php }
+        ?> </ul>
+        </div>
 <?php
 }
 add_action('thematic_singlepost', 'gallery_single_post');
